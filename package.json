@@ -1,0 +1,17 @@
+{
+  "name": "supernormal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "InstagramScraper.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "types": "module",
+  "dependencies": {
+    "puppeteer": "^20.2.1",
+    "scraper-instagram": "^1.0.17"
+  }
+}
