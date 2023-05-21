@@ -71,12 +71,15 @@ async function auth(username) {
     // Click on the "Following" link
   await page.click(`a[href="/${username}/following/"]`);
   console.log('Following Page opened!');
-  await new Promise((r) => setTimeout(r, 3000));
+  await page.waitForSelector('main');
+  await new Promise((r) => setTimeout(r, 2000));
+  //await page.mouse.move(1000,1000);
   //await autoScroll(page);
     //.then(page.waitForNavigation(2000))
     //.then(autoScroll(page));
     //await page.click('span[href="/${username}/подписок/"]");
-  
+  await page.waitForSelector('div[role="dialog"]'); // whole 
+  await page.waitForSelector('div[class="_aano"]');  // scroll in this area
   //const scrollbox = await page.waitForSelector('div[class="_aano"]');
   //console.log('Following Page opened!');
   //await page.focus('div[class="_aano"]')
