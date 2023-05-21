@@ -54,8 +54,6 @@ async function auth(username) {
   let aCookie = await page.cookies();
   fs.writeFileSync(g_sCookieFile, JSON.stringify(aCookie));
 
-
-
   console.log('loged in !');
   //await browser.close();
 
@@ -64,18 +62,35 @@ async function auth(username) {
 //async function scrapeInstagram(username) {
   
     // Go to the Instagram profile page
-    await page.goto(`https://www.instagram.com/${username}/`);
-    console.log('Page opened !');
+  await page.goto(`https://www.instagram.com/${username}/`);
+  console.log('User Page opened !');
 
     // Wait for the page to load completely
-    await page.waitForSelector('main');
+  await page.waitForSelector('main');
     
     // Click on the "Following" link
-    await page.click(`a[href="/${username}/following/"]`);
+  await page.click(`a[href="/${username}/following/"]`);
+  console.log('Following Page opened!');
+  await new Promise((r) => setTimeout(r, 3000));
+  //await autoScroll(page);
+    //.then(page.waitForNavigation(2000))
+    //.then(autoScroll(page));
     //await page.click('span[href="/${username}/подписок/"]");
   
-    // Wait for the following list to load
-    await page.waitForSelector('div[role="dialog"] ul'); // container (div) + list (ul)
+  const scrollbox = await page.waitForSelector('div[class="_aano"]');
+  //console.log('Following Page opened!');
+  await page.focus('div[class="_aano"]')
+  .then(await autoScroll(page));
+  //console.log('Scrollbox chosen!');
+  //await autoScroll(page);
+
+  //const dialog = await page.waitForSelector('div[role="dialog"]');
+  //autoScroll(dialog);
+  //await page.waitForSelector('div ul');// container (div) + list (ul)
+  console.log("we are here!");
+
+  //await autoScroll(f_page);
+  
   
     // Extract the usernames from the following list
     const followingList = await page.evaluate(() => {
@@ -93,5 +108,25 @@ async function auth(username) {
 
 }
 //**
+async function autoScroll(page) {
+  console.log('Scrolling...');
+  await page.evaluate(async () => {
+    await new Promise((resolve) => {
+      var totalHeight = 0;
+      var distance = 100;
+      var timer = setInterval(() => {
+        var scrollHeight = document.body.scrollHeight;
+        window.scrollBy(0, distance);
+        totalHeight += distance;
+
+        if (totalHeight >= scrollHeight - window.innerHeight) {
+          clearInterval(timer);
+          resolve();
+        }
+      }, 100);
+    });
+  });
+  console.log('Scrolling finished!');
+}
 
 console.log(auth("anddudeabides"));
