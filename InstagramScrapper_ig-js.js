@@ -76,16 +76,14 @@ async function auth(username) {
     //.then(page.waitForNavigation(2000))
     //.then(autoScroll(page));
     //await page.click('span[href="/${username}/подписок/"]");
-    const newPagePromise = new Promise(x => browser.once('targetcreated', target => x(target.page()))); 
-  const popup = await newPagePromise;
-  await popup.waitForSelector('div[class="_aano"]')
+  
   //const scrollbox = await page.waitForSelector('div[class="_aano"]');
   //console.log('Following Page opened!');
   //await page.focus('div[class="_aano"]')
   //.then(await autoScroll(popup));
   //console.log('Scrollbox chosen!');
-  await autoScroll(popup);
-
+  await autoScroll(page);
+/*
   //const dialog = await page.waitForSelector('div[role="dialog"]');
   //autoScroll(dialog);
   //await page.waitForSelector('div ul');// container (div) + list (ul)
@@ -106,7 +104,7 @@ async function auth(username) {
             return usernameElement ? usernameElement.textContent : null;
         });
     });
-
+*/
 
 }
 //**
