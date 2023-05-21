@@ -20,8 +20,8 @@ const g_sLoginPage = 'accounts/login';
 async function auth(username) {
 
     const browser = await puppeteer.launch({ headless: false });
-    const page = await browser.newPage();
-
+  const page = await browser.newPage();
+  
   if (fs.existsSync(g_sCookieFile)) {
     let sCookie = fs.readFileSync(g_sCookieFile, 'utf8');
     let aCookie = JSON.parse(sCookie);
@@ -76,13 +76,15 @@ async function auth(username) {
     //.then(page.waitForNavigation(2000))
     //.then(autoScroll(page));
     //await page.click('span[href="/${username}/подписок/"]");
-  
-  const scrollbox = await page.waitForSelector('div[class="_aano"]');
+    const newPagePromise = new Promise(x => browser.once('targetcreated', target => x(target.page()))); 
+  const popup = await newPagePromise;
+  await popup.waitForSelector('div[class="_aano"]')
+  //const scrollbox = await page.waitForSelector('div[class="_aano"]');
   //console.log('Following Page opened!');
-  await page.focus('div[class="_aano"]')
-  .then(await autoScroll(page));
+  //await page.focus('div[class="_aano"]')
+  //.then(await autoScroll(popup));
   //console.log('Scrollbox chosen!');
-  //await autoScroll(page);
+  await autoScroll(popup);
 
   //const dialog = await page.waitForSelector('div[role="dialog"]');
   //autoScroll(dialog);
