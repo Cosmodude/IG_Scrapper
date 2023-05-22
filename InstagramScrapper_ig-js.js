@@ -51,8 +51,8 @@ async function auth(username) {
     //await page.click('button:has-text("Не сейчас")');
     await page.click('button');
 
-  let aCookie = await page.cookies();
-  fs.writeFileSync(g_sCookieFile, JSON.stringify(aCookie));
+  //let aCookie = await page.cookies();
+  //fs.writeFileSync(g_sCookieFile, JSON.stringify(aCookie));
 
   console.log('loged in !');
   //await browser.close();
@@ -72,29 +72,40 @@ async function auth(username) {
   await page.click(`a[href="/${username}/following/"]`);
   console.log('Following Page opened!');
   await page.waitForSelector('main');
-  await new Promise((r) => setTimeout(r, 2000));
+  await new Promise((r) => setTimeout(r, 1000));
   //await page.mouse.move(1000,1000);
   //await autoScroll(page);
     //.then(page.waitForNavigation(2000))
     //.then(autoScroll(page));
     //await page.click('span[href="/${username}/подписок/"]");
   await page.waitForSelector('div[role="dialog"]'); // whole 
-  await page.waitForSelector('div[class="_aano"]');  // scroll in this area
+  const box_el = await page.waitForSelector('div[class="_aano"]'); // scroll in this area
+  const box = await box_el.boundingBox();
+  await console.log(box);
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await new Promise((r) => setTimeout(r, 500));
+  //await page.mouse.move(1000,1000);
+  const regex = /^\/.*\/$/;
+  //if(regex.test(await page.waitForSelector(`a[href]`)))
+  const ids = await page.waitForSelector(`a[href]`);
+  console.log(ids)
+  for (let i = 0; i < 24; i++){
+    await page.mouse.wheel({ deltaY: 1000 });
+    await new Promise((r) => setTimeout(r, 2000));
+  }
+  
+  await console.log(box);
+  //await page.waitForSelector('div[style="height: auto; overflow: hidden auto;"');
   //const scrollbox = await page.waitForSelector('div[class="_aano"]');
   //console.log('Following Page opened!');
-  //await page.focus('div[class="_aano"]')
-  //.then(await autoScroll(popup));
   //console.log('Scrollbox chosen!');
-  await autoScroll(page);
+  //await autoScroll(page);
 /*
   //const dialog = await page.waitForSelector('div[role="dialog"]');
   //autoScroll(dialog);
   //await page.waitForSelector('div ul');// container (div) + list (ul)
   console.log("we are here!");
 
-  //await autoScroll(f_page);
-  
-  
     // Extract the usernames from the following list
     const followingList = await page.evaluate(() => {
         // get li s 
@@ -132,4 +143,5 @@ async function autoScroll(page) {
   console.log('Scrolling finished!');
 }
 
-console.log(auth("anddudeabides"));
+res=auth("anddudeabides")
+console.log(res);
