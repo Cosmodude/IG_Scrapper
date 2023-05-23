@@ -15,8 +15,10 @@ const g_sLoginPage = 'accounts/login';
 //**
 
 
-async function getFollowing(username,n ) {
-
+async function getFollowing(username, n) {
+  
+  console.log("");
+  console.log("Following!!!");
     const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
   
@@ -29,9 +31,8 @@ async function getFollowing(username,n ) {
 
   const response = await page.goto(g_sStartUrl);
   await response;
-
+  console.log('login...');
   if (response.url().indexOf(g_sLoginPage) != -1) {
-    console.log('login ...');
       await page.waitForSelector('input[name="username"]');
     await page.focus('input[name="username"]');
     await page.keyboard.type(g_sLogin);
@@ -46,7 +47,7 @@ async function getFollowing(username,n ) {
     await new Promise((r) => setTimeout(r, 1000));
     await page.waitForSelector('button');
     await page.click('button');
-  console.log('loged in !');
+    console.log('loged in !');
 
     // Go to the Instagram profile page
   await page.goto(`https://www.instagram.com/${username}/`);
@@ -64,7 +65,7 @@ async function getFollowing(username,n ) {
   await page.waitForSelector('div[role="dialog"]'); // whole 
   const box_el = await page.waitForSelector('div[class="_aano"]'); // scroll in this area
   const box = await box_el.boundingBox();
-  await console.log(box);
+  //await console.log(box);
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await new Promise((r) => setTimeout(r, 500));
   //if(regex.test(await page.waitForSelector(`a[href]`)))
@@ -76,8 +77,7 @@ async function getFollowing(username,n ) {
   };
 
   const followingList = await getList(page);
-  console.log(followingList);
-  console.log("Done with following!");
+  console.log("Done with following!", followingList.length, followingList);
 
   await browser.close();
 
@@ -85,13 +85,16 @@ async function getFollowing(username,n ) {
 }
 //**
 
-console.log()
+
 const g_sLogin1 = 'nftking3000';
 const g_sCookieFile1 = g_sLogin1 + '.txt';
 const g_sPassword1 = '2022Nftking!';
 
 async function getFollowers(username, n) {
 
+  console.log("");
+  console.log("Followers!!!");
+  
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
@@ -106,7 +109,7 @@ async function getFollowers(username, n) {
   await response;
 
   if (response.url().indexOf(g_sLoginPage) != -1) {
-    console.log('login ...');
+    console.log('login...');
     await page.waitForSelector('input[name="username"]');
     await page.focus('input[name="username"]');
     await page.keyboard.type(g_sLogin1);
@@ -117,6 +120,9 @@ async function getFollowers(username, n) {
     await page.click;
   }
 
+  await new Promise((r) => setTimeout(r, 1000));
+  await page.waitForSelector('button');
+  await page.click('button');
   await new Promise((r) => setTimeout(r, 1000));
   await page.waitForSelector('button');
   await page.click('button');
@@ -137,7 +143,7 @@ async function getFollowers(username, n) {
   await page.waitForSelector('div[role="dialog"]'); // whole 
   const box_el = await page.waitForSelector('div[class="_aano"]'); // scroll in this area
   const box = await box_el.boundingBox();
-  await console.log(box);
+  //await console.log(box);
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await new Promise((r) => setTimeout(r, 500));
   //if(regex.test(await page.waitForSelector(`a[href]`)))
@@ -149,8 +155,7 @@ async function getFollowers(username, n) {
   };
 
   const followersList = await getList(page);
-  console.log(followersList);
-  console.log("Done with followers!");
+  console.log("Done with followers!", followersList.length, followersList);
 
   await browser.close();
 
@@ -173,23 +178,20 @@ const getList = async (page) => {
   const nd_hrefs = raw_hrefs.filter((href, index) => {  // deleting duplicates
     return raw_hrefs.indexOf(href) === index;
   });
-  console.log(nd_hrefs.length);
   const regex = /^\/[^/]+\/$/;  // checking for slashes at the beggining and end and no slashes in the middle
-  let filtered = nd_hrefs.filter((a) => regex.test(a));
-  console.log("Filtered!")
+  const filtered = nd_hrefs.filter((a) => regex.test(a));
+  console.log(nd_hrefs.length, "filtered!")
   filtered = filtered.slice(2);
-  console.log(filtered.length);
   return filtered;
 };
 
 
 async function main() {
-  following = await getFollowing("anddudeabides", 1);
-  console.log(typeof (following));
-  followers = await getFollowers("anddudeabides", 1);
-  const notFollowers = following.filter(fol => followers.indexOf(fol));
+  following = await getFollowing("anddudeabides", 32);
+  followers = await getFollowers("anddudeabides", 34);
+  const notFollowers = following.filter(fol => !(followers.indexOf(fol)>=0));
   //res= await getFollowing("nftking3000",2)
-console.log(notFollowers);
+console.log("Not following user:", notFollowers);
 }
 
 main();
