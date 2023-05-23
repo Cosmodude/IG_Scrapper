@@ -15,7 +15,7 @@ const g_sLoginPage = 'accounts/login';
 //**
 
 
-async function getFollowing(username) {
+async function getFollowing(username,n ) {
 
     const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
@@ -60,9 +60,6 @@ async function getFollowing(username) {
   await page.waitForSelector('main');
   await new Promise((r) => setTimeout(r, 1000));
   console.log('Following Page opened!');
-  //await page.mouse.move(1000,1000);
-
-  
 
   await page.waitForSelector('div[role="dialog"]'); // whole 
   const box_el = await page.waitForSelector('div[class="_aano"]'); // scroll in this area
@@ -71,14 +68,14 @@ async function getFollowing(username) {
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await new Promise((r) => setTimeout(r, 500));
   //if(regex.test(await page.waitForSelector(`a[href]`)))
-  console.log("Getting following list!");
+  console.log("Getting following list...");
   
-  for (let i = 0; i < ; i++){
+  for (let i = 0; i < n; i++){
     await page.mouse.wheel({ deltaY: 1000 });
     await new Promise((r) => setTimeout(r, 2000));
   };
 
-  const followingList = await getFollowingList(page);
+  const followingList = await getList(page);
   console.log(followingList);
   console.log("Done with following!");
 
@@ -88,44 +85,79 @@ async function getFollowing(username) {
 }
 //**
 
-const g_sLogin1 = 'blockchainma';
+const g_sLogin1 = 'nftking3000';
 const g_sCookieFile1 = g_sLogin1 + '.txt';
-const g_sPassword1 = '2023Instagram!';
+const g_sPassword1 = '2022Nftking!';
 
-async function getFollowers(username) {
+async function getFollowers(username, n) {
 
-const browser = await puppeteer.launch({ headless: false });
-const page = await browser.newPage();
+  const browser = await puppeteer.launch({ headless: false });
+  const page = await browser.newPage();
 
-if (fs.existsSync(g_sCookieFile1)) {
-  let sCookie = fs.readFileSync(g_sCookieFile1, 'utf8');
-  let aCookie = JSON.parse(sCookie);
+  if (fs.existsSync(g_sCookieFile1)) {
+    let sCookie = fs.readFileSync(g_sCookieFile1, 'utf8');
+    let aCookie = JSON.parse(sCookie);
 
-  await page.setCookie(...aCookie);
-}
+    await page.setCookie(...aCookie);
+  }
 
-const response = await page.goto(g_sStartUrl);
-await response;
+  const response = await page.goto(g_sStartUrl);
+  await response;
 
-if (response.url().indexOf(g_sLoginPage) != -1) {
-  console.log('login ...');
+  if (response.url().indexOf(g_sLoginPage) != -1) {
+    console.log('login ...');
     await page.waitForSelector('input[name="username"]');
-  await page.focus('input[name="username"]');
-  await page.keyboard.type(g_sLogin1);
-  await page.focus('input[name="password"]');
-  await page.keyboard.type(g_sPassword1);
-  await page.click('button[type="submit"]');
-  await new Promise((r) => setTimeout(r, 2000));
-  await page.click
-}
+    await page.focus('input[name="username"]');
+    await page.keyboard.type(g_sLogin1);
+    await page.focus('input[name="password"]');
+    await page.keyboard.type(g_sPassword1);
+    await page.click('button[type="submit"]');
+    await new Promise((r) => setTimeout(r, 2000));
+    await page.click;
+  }
 
   await new Promise((r) => setTimeout(r, 1000));
   await page.waitForSelector('button');
   await page.click('button');
-console.log('loged in !');
+  console.log('loged in !');
+  
+  // Go to the Instagram profile page
+  await page.goto(`https://www.instagram.com/${username}/`);
+  console.log('User Page opened !');
+  // Wait for the page to load completely
+  await page.waitForSelector('main');
+    
+  // Click on the "Followers" link
+  await page.click(`a[href="/${username}/followers/"]`); //followers/following
+  await page.waitForSelector('main');
+  await new Promise((r) => setTimeout(r, 1000));
+  console.log('Followers Page opened!');
+
+  await page.waitForSelector('div[role="dialog"]'); // whole 
+  const box_el = await page.waitForSelector('div[class="_aano"]'); // scroll in this area
+  const box = await box_el.boundingBox();
+  await console.log(box);
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await new Promise((r) => setTimeout(r, 500));
+  //if(regex.test(await page.waitForSelector(`a[href]`)))
+  console.log("Getting followers list...");
+
+  for (let i = 0; i < n; i++){
+    await page.mouse.wheel({ deltaY: 1000 });
+    await new Promise((r) => setTimeout(r, 2000));
+  };
+
+  const followersList = await getList(page);
+  console.log(followersList);
+  console.log("Done with followers!");
+
+  await browser.close();
+
+  return followersList;
+}
 
 
-const getFollowingList = async (page) => {
+const getList = async (page) => {
   // Extract the usernames from the following list
   await page.waitForSelector('div[class="_aano"]');
   console.log("Getting handles");
@@ -140,6 +172,7 @@ const getFollowingList = async (page) => {
   const nd_hrefs = raw_hrefs.filter((href, index) => {  // deleting duplicates
     return raw_hrefs.indexOf(href) === index;
   });
+  console.log(nd_hrefs.length);
   const regex = /^\/[^/]+\/$/;  // checking for slashes at the beggining and end and no slashes in the middle
   console.log(nd_hrefs);
   let filtered = nd_hrefs.filter((a) => regex.test(a));
@@ -148,5 +181,13 @@ const getFollowingList = async (page) => {
   return filtered.length;
 };
 
-res=auth("anddudeabides")
-console.log(res);
+
+async function main() {
+  following = await getFollowing("anddudeabides", 30);
+  followers = await getFollowers("anddudeabides", 30);
+  const notFollowers = following.filter(fol => followers.indexOf(fol));
+  //res= await getFollowing("nftking3000",2)
+console.log(notFollowers);
+}
+
+main();
