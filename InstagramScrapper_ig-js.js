@@ -85,6 +85,7 @@ async function getFollowing(username,n ) {
 }
 //**
 
+console.log()
 const g_sLogin1 = 'nftking3000';
 const g_sCookieFile1 = g_sLogin1 + '.txt';
 const g_sPassword1 = '2022Nftking!';
@@ -174,17 +175,18 @@ const getList = async (page) => {
   });
   console.log(nd_hrefs.length);
   const regex = /^\/[^/]+\/$/;  // checking for slashes at the beggining and end and no slashes in the middle
-  console.log(nd_hrefs);
   let filtered = nd_hrefs.filter((a) => regex.test(a));
+  console.log("Filtered!")
   filtered = filtered.slice(2);
-  console.log(filtered);
-  return filtered.length;
+  console.log(filtered.length);
+  return filtered;
 };
 
 
 async function main() {
-  following = await getFollowing("anddudeabides", 30);
-  followers = await getFollowers("anddudeabides", 30);
+  following = await getFollowing("anddudeabides", 1);
+  console.log(typeof (following));
+  followers = await getFollowers("anddudeabides", 1);
   const notFollowers = following.filter(fol => followers.indexOf(fol));
   //res= await getFollowing("nftking3000",2)
 console.log(notFollowers);
