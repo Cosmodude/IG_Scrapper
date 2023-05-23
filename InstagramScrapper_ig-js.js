@@ -79,8 +79,6 @@ async function auth(username) {
   await new Promise((r) => setTimeout(r, 500));
   const regex = /^\/.*\/$/;
   //if(regex.test(await page.waitForSelector(`a[href]`)))
-  const ids = await page.waitForSelector(`a`);
-  console.log(ids);
   console.log("Getting following list!");
   
   for (let i = 0; i < 1; i++){
@@ -101,15 +99,20 @@ const getFollowingList = async (page) => {
   // Extract the usernames from the following list
   await page.waitForSelector('div[class="_aano"]');
   console.log("Getting handles");
-  const hrefs = await page.$$eval('a[href]', as => as.map((a) => {
+
+  const raw_hrefs = await page.$$eval('a[href]', as => as.map((a) => {
     const usernameElement = a.getAttribute('href');
-    //return usernameElement ? usernameElement.textContent : null;
   return usernameElement;
   })
   );
-  console.log("Got!!!!");
-  console.log(hrefs);
-  const filtered = hrefs.filter((a) => a !== "/*/");
+  console.log("Got them!!!!");
+  console.log("Now filter!!!!");
+  const nd_hrefs = raw_hrefs.filter((href, index) => {
+    return raw_hrefs.indexOf(href) === index;
+});
+  console.log(nd_hrefs);
+  const filtered = nd_hrefs.filter((a) => a === "/*/");
+  console.log(filtered);
   return filtered;
 };
 
