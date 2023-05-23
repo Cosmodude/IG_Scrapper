@@ -45,10 +45,8 @@ async function auth(username) {
       await page.click
   }
 
-    await new Promise((r) => setTimeout(r, 3000));
+    await new Promise((r) => setTimeout(r, 1000));
     await page.waitForSelector('button');
-    //await page.waitForSelector('button[text="Не сейчас"]');
-    //await page.click('button:has-text("Не сейчас")');
     await page.click('button');
 
   //let aCookie = await page.cookies();
@@ -79,69 +77,45 @@ async function auth(username) {
     //.then(autoScroll(page));
     //await page.click('span[href="/${username}/подписок/"]");
   await page.waitForSelector('div[role="dialog"]'); // whole 
-  const box_el = await page.waitForSelector('div[class="_aano"]'); // scroll in this area
+  const box_el = await document.querySelectorAll('div[class="_aano"]'); // scroll in this area
   const box = await box_el.boundingBox();
   await console.log(box);
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await new Promise((r) => setTimeout(r, 500));
-  //await page.mouse.move(1000,1000);
   const regex = /^\/.*\/$/;
   //if(regex.test(await page.waitForSelector(`a[href]`)))
   const ids = await page.waitForSelector(`a[href]`);
   console.log(ids)
+  const followingList = await getFollowingList();
+  console.log(followingList);
   for (let i = 0; i < 24; i++){
     await page.mouse.wheel({ deltaY: 1000 });
     await new Promise((r) => setTimeout(r, 2000));
   }
   
-  await console.log(box);
   //await page.waitForSelector('div[style="height: auto; overflow: hidden auto;"');
-  //const scrollbox = await page.waitForSelector('div[class="_aano"]');
-  //console.log('Following Page opened!');
-  //console.log('Scrollbox chosen!');
-  //await autoScroll(page);
-/*
-  //const dialog = await page.waitForSelector('div[role="dialog"]');
+
   //autoScroll(dialog);
   //await page.waitForSelector('div ul');// container (div) + list (ul)
   console.log("we are here!");
-
-    // Extract the usernames from the following list
-    const followingList = await page.evaluate(() => {
-        // get li s 
-        const list = Array.from(
-            document.querySelectorAll('div[role="dialog"] ul li')  // li element of list
-        );
-            // get names of 
-        return list.map((element) => {
-            const usernameElement = element.querySelector('a');
-            return usernameElement ? usernameElement.textContent : null;
-        });
-    });
-*/
-
 }
 //**
-async function autoScroll(page) {
-  console.log('Scrolling...');
-  await page.evaluate(async () => {
-    await new Promise((resolve) => {
-      var totalHeight = 0;
-      var distance = 100;
-      var timer = setInterval(() => {
-        var scrollHeight = document.body.scrollHeight;
-        window.scrollBy(0, distance);
-        totalHeight += distance;
 
-        if (totalHeight >= scrollHeight - window.innerHeight) {
-          clearInterval(timer);
-          resolve();
-        }
-      }, 100);
+const getFollowingList = async () => {
+  // Extract the usernames from the following list
+  const followingList = await page.evaluate(() => {
+    // get li s 
+    const list = Array.from(
+      document.querySelectorAll('div[role="dialog"] ul li')  // li element of list
+    );
+    // get names of 
+    return list.map((element) => {
+      const usernameElement = element.querySelector('a');
+      return usernameElement ? usernameElement.textContent : null;
     });
   });
-  console.log('Scrolling finished!');
-}
+  return followingList;
+};
 
 res=auth("anddudeabides")
 console.log(res);
