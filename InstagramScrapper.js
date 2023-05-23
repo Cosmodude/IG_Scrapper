@@ -179,7 +179,7 @@ const getList = async (page) => {
     return raw_hrefs.indexOf(href) === index;
   });
   const regex = /^\/[^/]+\/$/;  // checking for slashes at the beggining and end and no slashes in the middle
-  const filtered = nd_hrefs.filter((a) => regex.test(a));
+  let filtered = nd_hrefs.filter((a) => regex.test(a));
   console.log(nd_hrefs.length, "filtered!")
   filtered = filtered.slice(2);
   return filtered;
@@ -187,11 +187,19 @@ const getList = async (page) => {
 
 
 async function main() {
+  // need to set the number of scrolls >= yourFollowersNumber/12 as a second argument 
   following = await getFollowing("anddudeabides", 32);
   followers = await getFollowers("anddudeabides", 34);
   const notFollowers = following.filter(fol => !(followers.indexOf(fol)>=0));
   //res= await getFollowing("nftking3000",2)
-console.log("Not following user:", notFollowers);
+  console.log("Not following user:", notFollowers);
+  return notFollowers;
 }
 
 main();
+/*const button = document.getElementById("not");
+const span = document.getElementById("notFollowers");
+button.addEventListener("click", () => {
+  span.textContent = main();
+});
+*/
