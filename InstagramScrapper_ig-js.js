@@ -53,10 +53,6 @@ async function auth(username) {
   //fs.writeFileSync(g_sCookieFile, JSON.stringify(aCookie));
 
   console.log('loged in !');
-  //await browser.close();
-
-  //return JSON.stringify(aCookie);
-
 //async function scrapeInstagram(username) {
   
     // Go to the Instagram profile page
@@ -67,33 +63,33 @@ async function auth(username) {
   await page.waitForSelector('main');
     
     // Click on the "Following" link
-  await page.click(`a[href="/${username}/following/"]`);
-  console.log('Following Page opened!');
+  await page.click(`a[href="/${username}/followers/"]`); //followers/following
   await page.waitForSelector('main');
   await new Promise((r) => setTimeout(r, 1000));
+  console.log('Following Page opened!');
   //await page.mouse.move(1000,1000);
-  //await autoScroll(page);
-    //.then(page.waitForNavigation(2000))
-    //.then(autoScroll(page));
-    //await page.click('span[href="/${username}/подписок/"]");
+
+  
+
   await page.waitForSelector('div[role="dialog"]'); // whole 
-  const box_el = await document.querySelectorAll('div[class="_aano"]'); // scroll in this area
+  const box_el = await page.waitForSelector('div[class="_aano"]'); // scroll in this area
   const box = await box_el.boundingBox();
   await console.log(box);
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await new Promise((r) => setTimeout(r, 500));
   const regex = /^\/.*\/$/;
   //if(regex.test(await page.waitForSelector(`a[href]`)))
-  const ids = await page.waitForSelector(`a[href]`);
-  console.log(ids)
-  const followingList = await getFollowingList();
-  console.log(followingList);
-  for (let i = 0; i < 24; i++){
+  const ids = await page.waitForSelector(`a`);
+  console.log(ids);
+  console.log("Getting following list!");
+  
+  for (let i = 0; i < 1; i++){
     await page.mouse.wheel({ deltaY: 1000 });
     await new Promise((r) => setTimeout(r, 2000));
-  }
-  
-  //await page.waitForSelector('div[style="height: auto; overflow: hidden auto;"');
+  };
+
+  const followingList = await getFollowingList(page);
+  console.log(followingList);
 
   //autoScroll(dialog);
   //await page.waitForSelector('div ul');// container (div) + list (ul)
@@ -101,20 +97,20 @@ async function auth(username) {
 }
 //**
 
-const getFollowingList = async () => {
+const getFollowingList = async (page) => {
   // Extract the usernames from the following list
-  const followingList = await page.evaluate(() => {
-    // get li s 
-    const list = Array.from(
-      document.querySelectorAll('div[role="dialog"] ul li')  // li element of list
-    );
-    // get names of 
-    return list.map((element) => {
-      const usernameElement = element.querySelector('a');
-      return usernameElement ? usernameElement.textContent : null;
-    });
-  });
-  return followingList;
+  await page.waitForSelector('div[class="_aano"]');
+  console.log("Getting handles");
+  const hrefs = await page.$$eval('a[href]', as => as.map((a) => {
+    const usernameElement = a.getAttribute('href');
+    //return usernameElement ? usernameElement.textContent : null;
+  return usernameElement;
+  })
+  );
+  console.log("Got!!!!");
+  console.log(hrefs);
+  const filtered = hrefs.filter((a) => a !== "/*/");
+  return filtered;
 };
 
 res=auth("anddudeabides")
