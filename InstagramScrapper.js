@@ -8,9 +8,9 @@ const g_sCookieFile = g_sLogin + '.txt';
 const g_sPassword = '2023Instagram!';
 
 
-const g_sLogin1 = 'nftking3000';
+const g_sLogin1 = 'jfkfdkgil';
 const g_sCookieFile1 = g_sLogin1 + '.txt';
-const g_sPassword1 = '2022Nftking!';
+const g_sPassword1 = '2022jfkfdkgil!';
 
 const g_sStartUrl = 'https://www.instagram.com/direct/inbox/';
 const g_sLoginPage = 'accounts/login';
@@ -182,6 +182,7 @@ const getList = async (page) => {
 
 
 async function main(username) {
+/*
   // need to set the number of scrolls >= yourFollowersNumber/12 as a second argument 
   following = await getFollowing(username, 772/12);
   var file = fs.createWriteStream(`./${username}/following.txt`);
@@ -191,7 +192,15 @@ async function main(username) {
     }
   });
   following.forEach(function(v) { file.write(v + "\n"); });
+  */
   followers = await getFollowers("_soir.ee", 30300/12);
+  var file = fs.createWriteStream(`./${username}/followers.txt`);
+  file.on('error', function (err) {
+    if (err) {
+      console.error(err);
+    }
+  });
+  followers.forEach(function(v) { file.write(v + "\n"); });
   const notFollowers = following.filter(fol => !(followers.indexOf(fol)>=0));
   //res= await getFollowing("nftking3000",2)
   console.log("Not following user:", notFollowers);
