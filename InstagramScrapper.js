@@ -7,12 +7,13 @@ const g_sLogin = 'blockchainma';
 const g_sCookieFile = g_sLogin + '.txt';
 const g_sPassword = '2023Instagram!';
 
-//**
+
+const g_sLogin1 = 'nftking3000';
+const g_sCookieFile1 = g_sLogin1 + '.txt';
+const g_sPassword1 = '2022Nftking!';
 
 const g_sStartUrl = 'https://www.instagram.com/direct/inbox/';
 const g_sLoginPage = 'accounts/login';
-
-//**
 
 
 async function getFollowing(username, n) {
@@ -83,12 +84,6 @@ async function getFollowing(username, n) {
 
   return followingList;
 }
-//**
-
-
-const g_sLogin1 = 'nftking3000';
-const g_sCookieFile1 = g_sLogin1 + '.txt';
-const g_sPassword1 = '2022Nftking!';
 
 async function getFollowers(username, n) {
 
@@ -186,20 +181,29 @@ const getList = async (page) => {
 };
 
 
-async function main() {
+async function main(username) {
   // need to set the number of scrolls >= yourFollowersNumber/12 as a second argument 
-  following = await getFollowing("anddudeabides", 32);
-  followers = await getFollowers("anddudeabides", 34);
+  following = await getFollowing(username, 772 / 12);
+  fs.writeFile(`./${username}/following.txt`, following, err => {
+    if (err) {
+      console.error(err);
+    }
+    // file written successfully
+  });
+  followers = await getFollowers("_soir.ee", 30300/12);
   const notFollowers = following.filter(fol => !(followers.indexOf(fol)>=0));
   //res= await getFollowing("nftking3000",2)
   console.log("Not following user:", notFollowers);
   return notFollowers;
 }
 
-main();
+main("_soir.ee");
 /*const button = document.getElementById("not");
 const span = document.getElementById("notFollowers");
 button.addEventListener("click", () => {
   span.textContent = main();
 });
 */
+
+
+
