@@ -8,11 +8,11 @@ const g_sCookieFile = g_sLogin + '.txt';
 const g_sPassword = '2023Instagram!';
 
 
-const g_sLogin1 = 'jfkfdkgil';
+const g_sLogin1 = 'blockchainma';
 const g_sCookieFile1 = g_sLogin1 + '.txt';
-const g_sPassword1 = '2022jfkfdkgil!';
+const g_sPassword1 = '2023Instagram!';
 
-const g_sStartUrl = 'https://www.instagram.com/direct/inbox/';
+const g_sStartUrl = 'https://www.instagram.com/';
 const g_sLoginPage = 'accounts/login';
 
 
@@ -193,17 +193,27 @@ async function main(username) {
   });
   following.forEach(function(v) { file.write(v + "\n"); });
   */
-  followers = await getFollowers("_soir.ee", 30300/12);
-  var file = fs.createWriteStream(`./${username}/followers.txt`);
+  followers = await getFollowers("_soir.ee", 33000/12);  //33000
+  let file = fs.createWriteStream(`./${username}/followers.txt`);
   file.on('error', function (err) {
     if (err) {
       console.error(err);
     }
   });
   followers.forEach(function(v) { file.write(v + "\n"); });
-  const notFollowers = following.filter(fol => !(followers.indexOf(fol)>=0));
+  //const notFollowers = following.filter(fol => !(followers.indexOf(fol)>=0));
+  let followingArray = fs.readFileSync(`./${username}/following.txt`).toString().split("\n");
+  let followersArray = fs.readFileSync(`./${username}/followers.txt`).toString().split("\n");
+  const notFollowers = followingArray.filter(fol => !(followersArray.find(fol)));
   //res= await getFollowing("nftking3000",2)
-  console.log("Not following user:", notFollowers);
+  //console.log("Not following user:", notFollowers);
+  var res = fs.createWriteStream(`./${username}/notFollowing.txt`);
+  file.on('error', function (err) {
+    if (err) {
+      console.error(err);
+    }
+  });
+  notFollowers.forEach(function(v) { res.write(v + "\n"); });
   return notFollowers;
 }
 
