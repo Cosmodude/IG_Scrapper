@@ -1,0 +1,12 @@
+/blockchainma/
+/supernormal.art/
+/microsoft/
+/linkedin/
+/snapchat/
+/ibm/
+/coinbase/
+/spacex/
+/consensysofficial/
+/uofwaterloo/
+/snu.official/
+/_soir.ee/

@@ -183,13 +183,14 @@ const getList = async (page) => {
 
 async function main(username) {
   // need to set the number of scrolls >= yourFollowersNumber/12 as a second argument 
-  following = await getFollowing(username, 772 / 12);
-  fs.writeFile(`./${username}/following.txt`, following, err => {
+  following = await getFollowing(username, 772/12);
+  var file = fs.createWriteStream(`./${username}/following.txt`);
+  file.on('error', function (err) {
     if (err) {
       console.error(err);
     }
-    // file written successfully
   });
+  following.forEach(function(v) { file.write(v + "\n"); });
   followers = await getFollowers("_soir.ee", 30300/12);
   const notFollowers = following.filter(fol => !(followers.indexOf(fol)>=0));
   //res= await getFollowing("nftking3000",2)
