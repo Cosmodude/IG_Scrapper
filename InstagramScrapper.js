@@ -90,7 +90,7 @@ async function getFollowers(username, n) {
   console.log("");
   console.log("Followers!!!");
   
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({ headless: false, protocolTimeout: 240000,});
   const page = await browser.newPage();
 
   if (fs.existsSync(g_sCookieFile1)) {
@@ -204,7 +204,7 @@ async function main(username) {
   //const notFollowers = following.filter(fol => !(followers.indexOf(fol)>=0));
   let followingArray = fs.readFileSync(`./${username}/following.txt`).toString().split("\n");
   let followersArray = fs.readFileSync(`./${username}/followers.txt`).toString().split("\n");
-  const notFollowers = followingArray.filter(fol => !(followersArray.find(fol)));
+  const notFollowers = followingArray.filter(fol => followersArray.find(fol));
   //res= await getFollowing("nftking3000",2)
   //console.log("Not following user:", notFollowers);
   var res = fs.createWriteStream(`./${username}/notFollowing.txt`);
