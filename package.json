@@ -11,6 +11,7 @@
   "license": "ISC",
   "types": "module",
   "dependencies": {
+    "dotenv": "^16.1.4",
     "puppeteer": "^20.2.1",
     "scraper-instagram": "^1.0.17"
   }
