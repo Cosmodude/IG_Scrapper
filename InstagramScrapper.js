@@ -193,7 +193,7 @@ async function main(username) {
   });
   following.forEach(function(v) { file.write(v + "\n"); });
   */
-  followers = await getFollowers("_soir.ee", 33000/12);  //33000
+  followers = await getFollowers("_soir.ee", 10000/12);  //33000
   let file = fs.createWriteStream(`./${username}/followers.txt`);
   file.on('error', function (err) {
     if (err) {
